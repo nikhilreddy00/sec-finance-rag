@@ -1,0 +1,48 @@
+# Environment — NEVER commit API keys
+.env
+.env.local
+.env.*.local
+
+# Data directories (too large for git)
+data/raw/
+data/processed/
+data/chroma_db/
+data/bm25_index.pkl
+data/eval_dataset.json
+data/ragas_results.csv
+data/deepeval_results.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/

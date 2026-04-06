@@ -1,0 +1,75 @@
+version: "3.9"
+
+# ── Apple 10-K RAG Chatbot — Docker Compose ─────────────────────────────────
+#
+# Services:
+#   ingest    → one-off ingestion job (parse HTML → embed → ChromaDB + BM25)
+#   app       → Streamlit chatbot frontend  (http://localhost:8501)
+#   api       → FastAPI backend             (http://localhost:8000)
+#
+# Quick start:
+#   1. Copy .env.example → .env and add your ANTHROPIC_API_KEY
+#   2. docker-compose up --build
+#      (ingestion runs automatically on first start if no index exists)
+#
+# Force re-ingest (e.g. after updating Apple_Dataset files):
+#   docker-compose run --rm ingest
+# ─────────────────────────────────────────────────────────────────────────────
+
+x-common: &common
+  build: .
+  env_file: .env
+  volumes:
+    # Persist ChromaDB, BM25 index, and parsed JSON across container restarts
+    - apple_data:/app/data
+  restart: unless-stopped
+
+services:
+
+  # ── One-off ingestion job ─────────────────────────────────────────────────
+  ingest:
+    <<: *common
+    container_name: apple_ingest
+    environment:
+      SERVICE: ingest
+    # No port exposure — runs and exits
+    restart: "no"
+
+  # ── Streamlit chatbot frontend ─────────────────────────────────────────────
+  app:
+    <<: *common
+    container_name: apple_app
+    environment:
+      SERVICE: streamlit
+    ports:
+      - "8501:8501"
+    depends_on:
+      - ingest
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ── FastAPI backend ────────────────────────────────────────────────────────
+  api:
+    <<: *common
+    container_name: apple_api
+    environment:
+      SERVICE: api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ingest
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+# ── Named volume for persistent data ─────────────────────────────────────────
+volumes:
+  apple_data:
+    driver: local

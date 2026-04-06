@@ -1,0 +1,49 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environment — never copy into image
+venv/
+.venv/
+env/
+
+# Data — mounted as Docker volume, not baked into image
+data/chroma_db/
+data/raw/
+data/processed/
+data/bm25_index.pkl
+data/eval_dataset.json
+
+# Dev/IDE files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md
+ARCHITECTURE_REPORT.md
+
+# Secrets — never bake into image
+.env
+.env.*
+!.env.example
+
+# Test artefacts
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Claude Code settings
+.claude/
