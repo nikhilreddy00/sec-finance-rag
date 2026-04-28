@@ -95,17 +95,26 @@ REALTIME_MESSAGE = (
 # ---------------------------------------------------------------------------
 
 ADVICE_PATTERNS = [
-    r"\b(should|would you recommend).{0,20}(buy|sell|invest|purchase|hold|short)\b",
+    r"\b(should|would|do) you recommend.{0,30}(buy|sell|invest|purchase|hold|short)\b",
+    r"\b(should|would|do) you recommend.{0,15}(apple|aapl|stock|shares?|equity)\b",
     r"\b(buy|sell|invest in|purchase).{0,20}(stock|share|equity)\b",
     r"\bwhat.{0,20}(stock|share|investment).{0,20}(buy|pick|choose|recommend)\b",
     r"\b(is it (worth|good|smart|wise)).{0,20}(buy|invest|purchase)\b",
-    r"\b(best|top|good).{0,20}(stock|investment|portfolio)\b",
+    r"\bis.{0,15}(stock|shares?|aapl|apple).{0,15}(a )?(good|smart|wise|great|right).{0,15}(buy|invest|purchase|hold)\b",
+    r"\b(worth|good|smart|wise|right).{0,10}(buying|investing in|to buy|to invest)\b",
+    r"\b(best|top|good).{0,20}(stocks?|portfolio)\b",
+    r"\b(i |we )?(strongly )?(recommend|advise|suggest).{0,20}(buy|sell|invest|purchas|hold|short)",
     r"\bshould i (invest|buy|sell|hold|short)\b",
     r"\bwhat.{0,20}i.{0,10}(invest|buy|sell)\b",
-    r"\bportfolio (recommend|suggest|advice|allocat)\b",
-    r"\btrade(ing)? (setup|signal|tip|recommendation)\b",
-    r"\bentry (point|price).{0,15}(stock|share)\b",
+    r"\bportfolio (recommend|suggest|advice|allocat)",
+    r"\btrad(e|ing) (setup|signal|tip|recommendation)\b",
+    r"\bentry (point|price).{0,15}(stocks?|shares?)\b",
     r"\btarget price\b",
+    r"\bprice.{0,8}target\b",
+    r"\b(buy or sell|sell or buy|buy.{0,5}or.{0,5}hold)\b",
+    r"\b(is|are).{0,20}(apple|aapl|stock|shares?).{0,20}(undervalued|overvalued|fairly valued)\b",
+    r"\b(good|right|best).{0,15}time.{0,15}(to buy|to invest|to sell|to purchase)\b",
+    r"\bis this (a )?(good|right|smart|wise).{0,15}(buy|investment|invest|time to (buy|invest))\b",
 ]
 
 ADVICE_MESSAGE = (
