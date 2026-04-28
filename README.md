@@ -10,10 +10,7 @@
 [![ChromaDB](https://img.shields.io/badge/Vector%20DB-ChromaDB%20%2F%20Qdrant-green)](https://trychroma.com)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit)](https://streamlit.io)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit%20Cloud-FF4B4B?logo=streamlit)](https://nikhilreddy00-sec-finance-rag.streamlit.app)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
-
-**[Try the Live Demo →](https://nikhilreddy00-sec-finance-rag.streamlit.app)** *(10 free queries — then run locally with your own API key)*
 
 </div>
 
@@ -57,7 +54,7 @@ The result is a chatbot that answers financial questions with **citation-backed 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        USER INTERFACE                               │
-│              Streamlit Chat  ·  FastAPI REST  ·  SSE Stream         │
+│           Streamlit Chat  ·  FastAPI REST  ·  SSE Streaming          │
 └───────────────────────────────┬─────────────────────────────────────┘
                                 │
                     ┌───────────▼───────────┐
@@ -447,9 +444,9 @@ Finance Bot/
 ### Prerequisites
 
 - Python 3.10+
-- ~4 GB disk space (embedding model + index)
-- `ANTHROPIC_API_KEY` (required)
-- `COHERE_API_KEY` (optional — falls back to cosine similarity)
+- ~4 GB disk space (embedding model + ChromaDB index)
+- `ANTHROPIC_API_KEY` (required — free at [console.anthropic.com](https://console.anthropic.com))
+- `COHERE_API_KEY` (optional — free at [dashboard.cohere.com](https://dashboard.cohere.com); falls back to cosine similarity without it)
 
 ### 1. Clone and create environment
 
@@ -465,22 +462,26 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env and set your API keys:
+# Open .env and add your API keys
 ```
 
 ```env
 ANTHROPIC_API_KEY=sk-ant-...
 COHERE_API_KEY=...            # optional
-VECTOR_STORE=chroma           # or qdrant
+VECTOR_STORE=chroma
 CLAUDE_MODEL=claude-sonnet-4-6
 EMBEDDING_MODEL=BAAI/bge-large-en-v1.5
 ```
 
-### 3. Run ingestion (Apple demo — ~3 min on CPU)
+### 3. Run ingestion (~3 min on CPU)
+
+The Apple 10-K HTML filings (FY2020–FY2025) are included in the repo under `Apple_Dataset/`. This step parses, chunks, embeds, and indexes them into ChromaDB + BM25.
 
 ```bash
 python scripts/ingest_apple_html.py
 ```
+
+Expected output:
 
 ```
 Step 1/4  Parsing HTML filings      ✓  6 files → 1,876 blocks
@@ -493,19 +494,21 @@ BM25 chunks     : 1,708
 Done in 3m 12s
 ```
 
+> **Note:** The BGE-large embedding model (~1.3 GB) is downloaded automatically on first run from HuggingFace and cached locally. Subsequent runs use the cache.
+
 ### 4. Launch the chatbot
 
 ```bash
 streamlit run app.py
 ```
 
-Open **http://localhost:8501**
+Open **http://localhost:8501** in your browser.
 
-### 5. (Optional) Start API server
+### 5. (Optional) Start the API server
 
 ```bash
 uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
-# Docs: http://localhost:8000/docs
+# Interactive docs: http://localhost:8000/docs
 ```
 
 ---
