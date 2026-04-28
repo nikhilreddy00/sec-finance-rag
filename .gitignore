@@ -3,14 +3,16 @@
 .env.local
 .env.*.local
 
-# Data directories (too large for git)
+# Raw and processed data (large, regeneratable)
 data/raw/
 data/processed/
-data/chroma_db/
-data/bm25_index.pkl
 data/eval_dataset.json
 data/ragas_results.csv
 data/deepeval_results.json
+
+# Pre-built index files ARE committed (needed for Streamlit Cloud deployment)
+# data/chroma_db/   ← intentionally NOT gitignored
+# data/bm25_index.pkl ← intentionally NOT gitignored
 
 # Python
 __pycache__/
