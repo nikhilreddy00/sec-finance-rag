@@ -10,7 +10,10 @@
 [![ChromaDB](https://img.shields.io/badge/Vector%20DB-ChromaDB%20%2F%20Qdrant-green)](https://trychroma.com)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit)](https://streamlit.io)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit%20Cloud-FF4B4B?logo=streamlit)](https://nikhilreddy00-sec-finance-rag.streamlit.app)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
+
+**[Try the Live Demo →](https://nikhilreddy00-sec-finance-rag.streamlit.app)** *(10 free queries — then run locally with your own API key)*
 
 </div>
 
