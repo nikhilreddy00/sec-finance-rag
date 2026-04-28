@@ -178,12 +178,14 @@ _OUT_OF_SCOPE_WORD_TOKENS = [
     "huawei",
 ]
 
-# These need word-boundary matching (they're ≤4 chars and would match substrings)
+# These need word-boundary matching (short tokens that would match substrings)
 _OUT_OF_SCOPE_TICKER_WORDS = {
     "tsla", "msft", "googl", "goog", "amzn", "nvda", "jpm", "jnj",
     "wmt", "xom", "nflx", "intc", "amd", "crm", "orcl", "csco",
     "qcom", "avgo", "pfe", "mrk", "abbv", "unh", "sbux", "nke",
     "pypl",
+    # 4-letter company names that are safe to word-boundary match
+    "meta", "snap", "uber", "lyft",
 }
 
 _OUT_OF_SCOPE_TICKER_PATTERN = re.compile(

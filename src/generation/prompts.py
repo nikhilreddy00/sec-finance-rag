@@ -61,16 +61,6 @@ Output ONLY a numbered list, one query per line. No explanations.
 
 Original question: {question}"""
 
-FILTER_EXTRACTION_PROMPT = """\
-Extract metadata filters from this SEC filing search query.
-Output ONLY a JSON object with these optional fields:
-  ticker (string), company_name (string), form_type (string),
-  fiscal_year (integer), filing_date_start (YYYY-MM-DD), filing_date_end (YYYY-MM-DD)
-
-Include only fields you can confidently extract. Output only the JSON, nothing else.
-
-Query: {query}"""
-
 SCOPE_CLASSIFIER_PROMPT = """\
 You are a filter for a chatbot that ONLY answers questions about Apple Inc.'s
 annual 10-K SEC filings for fiscal years 2020, 2021, 2022, 2023, 2024, and 2025.

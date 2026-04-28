@@ -234,17 +234,18 @@ if not st.session_state.messages:
     cols = st.columns(2)
     for i, q in enumerate(EXAMPLE_QUESTIONS):
         if cols[i % 2].button(q, key=f"example_{i}"):
-            st.session_state.messages.append({"role": "user", "content": q})
-            st.rerun()
+            # Store in a dedicated key so the query block below picks it up
+            # on this same run (st.chat_input returns None after button click)
+            st.session_state["_pending_prompt"] = q
 
 # ---------------------------------------------------------------------------
-# Query input
+# Query input — picks up typed queries AND button-triggered example questions
 # ---------------------------------------------------------------------------
 
 prompt = st.chat_input(
     "Ask about Apple's 10-K annual reports...",
     disabled=(queries_remaining() == 0),
-)
+) or st.session_state.pop("_pending_prompt", None)
 
 if prompt:
     # Check demo limit before processing

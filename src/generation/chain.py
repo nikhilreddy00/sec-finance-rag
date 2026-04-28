@@ -165,11 +165,17 @@ class FinanceRAGChain:
         """
         Streaming version of query(). Yields text deltas as they arrive.
 
+        Output guardrails are applied to the fully-assembled response after
+        streaming completes, then the corrected response is yielded as a
+        final replacement chunk. This keeps streaming UX while ensuring
+        prohibited phrases, citation checks, and grounding are enforced.
+
         Usage (Streamlit)::
             for token in chain.query_stream(question):
                 st.write(token)
         """
         from src.guardrails.input_guard import InputGuardrail
+        from src.guardrails.output_guard import OutputGuardrail
 
         guard_in = InputGuardrail()
         validated_query = guard_in.validate(question)
@@ -177,6 +183,8 @@ class FinanceRAGChain:
         chunks, _ = self._retrieve(validated_query, filters, top_k)
         system_prompt, user_prompt = format_rag_prompt(validated_query, chunks)
 
+        # Collect the full streamed response
+        full_response = ""
         with self.client.messages.stream(
             model=settings.claude_model,
             max_tokens=4096,
@@ -184,10 +192,20 @@ class FinanceRAGChain:
             messages=[{"role": "user", "content": user_prompt}],
         ) as stream:
             for text in stream.text_stream:
+                full_response += text
                 yield text
 
-        # Yield disclaimer at end
-        yield FINANCIAL_DISCLAIMER
+        # Apply output guardrails to the assembled response.
+        # If the response is modified (e.g. prohibited phrase replaced, sources
+        # auto-appended), yield a sentinel and the corrected full text so the
+        # caller can replace its displayed content.
+        guard_out = OutputGuardrail()
+        validated = guard_out.validate(full_response, validated_query, chunks)
+        if validated != full_response:
+            # Signal the caller to replace displayed text with the corrected version
+            yield "\x00REPLACE\x00" + validated
+        else:
+            yield FINANCIAL_DISCLAIMER
 
     def get_sources(
         self,
